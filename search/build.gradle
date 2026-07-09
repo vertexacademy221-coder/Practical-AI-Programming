@@ -1,0 +1,71 @@
+plugins{
+    id "java"
+    id "application"
+    id "maven-publish"
+}
+
+group = "com.yossep"
+version = "1.0-SNAPSHOT"
+description = "Representation of Search State Space and Search Operators"
+
+java{
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
+}
+
+
+application{
+    mainClass = "search.maze.MazeDepthFirstSearch"
+}
+
+
+dependencies{
+    // Dépendances de compilation et d'exécution
+    implementation 'org.slf4j:slf4j-api:1.7.12'
+    implementation 'org.apache.commons:commons-io:1.3.2'
+
+    // Dépendance pour les tests unitaires
+    testImplementation 'junit:junit:4.13.1'
+}
+
+
+tasks.withType(JavaCompile){
+    options.encoding = "UTF-8"
+}
+
+tasks.register("checkFiles") {
+    doLast {
+        sourceSets.main.java.each { println "Fichier trouvé par Gradle : " + it }
+    }
+}
+
+// Définition d'un modèle pour les tâches d'exécution
+def createRunTask(String taskName, String mainClassPath)
+{
+    tasks.register(taskName, JavaExec){
+        group = "Execution"
+        classpath = sourceSets.main.runtimeClasspath
+        // Utilisation de la syntaxe moderne pour fixer la classe principale
+        mainClass.set(mainClassPath)
+        standardInput = System.in // Permet de jouer dans le terminal si besoin
+    }
+}
+
+// Création des raccourcis pour chaque jeu/algorithme
+//createRunTask("runChess", "search.game.Chess")
+//createRunTask("runTicTacToe", "search.game.TicTacToe")
+//createRunTask("runGraph", "search.graph.GraphDepthFirstSearch")
+createRunTask("runMazeDepth", "search.maze.MazeDepthFirstSearch")
+createRunTask("runMazeBreadth", "search.maze.MazeBreadthFirstSearch")
+
+
+// Équivalent du 'mvn install' (publie dans le dossier build/install ou mavenLocal)
+// CONFIGURATION POUR MAVEN PUBLISH (Équivalent mvn install)
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+        }
+    }
+}

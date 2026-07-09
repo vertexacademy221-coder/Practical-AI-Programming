@@ -1,0 +1,67 @@
+plugins{
+	id "java"
+	id "application"
+	id "maven-publish"
+}
+
+group = "com.yossep"
+version = "1.0-SNAPSHOT"
+description = "Client library design to interact with Gemini API."
+
+
+java{
+	toolchain{
+		languageVersion = JavaLanguageVersion.of(17)
+	}
+}
+
+
+application{
+	mainClass = "yossep.gemini.GeminiCompletions"
+}
+
+
+dependencies{
+	// Dependances de compilation et d'execution
+	implementation "org.slf4j:slf4j-api:1.7.12"
+	implementation "org.apache.commons:commons-io:1.3.2"
+	implementation "org.json:json:20240303"
+	implementation "com.google.genai:google-genai:1.4.1"
+
+	// Dependance pour les tests unitaires
+	testImplementation "junit:junit:4.13.1"
+}
+
+tasks.withType(JavaCompile){
+	options.encoding = "UTF-8"
+}
+
+tasks.register("checkFiles"){
+	doLast {
+		sourceSets.main.java.each {println "Fichier trouve par gradle : " + it}
+	}
+}
+
+
+// Definition d'un modele pour les taches d'execution
+def createRunTask(String taskName, String mainClassPath){
+	tasks.register(taskName, JavaExec){
+		group = "Execution"
+		classpath = sourceSets.main.runtimeClasspath
+
+		mainClass.set(mainClass)
+		standardInput = System.in 	// utilisation du terminal
+	}
+}
+
+
+createRunTask("runGeminiAI", "yossep.gemini.GeminiCompletions")
+
+// Publie dans le dossier build/install
+publishing{
+	publication{
+		mavenJava(MavenPublication){
+			from components.java
+		}
+	}
+}
