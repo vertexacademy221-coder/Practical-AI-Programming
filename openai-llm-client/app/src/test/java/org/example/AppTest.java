@@ -3,12 +3,34 @@
  */
 package org.example;
 
+import java.io.IOException;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
 public class AppTest {
-    @Test public void appHasAGreeting() {
-        App classUnderTest = new App();
-        assertNotNull("app should have a greeting", classUnderTest.getGreeting());
+    
+    @Test public void appHasAGreeting() 
+    {
+        OpenAICompletions classUnderTest = new OpenAICompletions();
+        assertNotNull("OpenAICompletions'app should have a greeting", classUnderTest.getGreeting());
+    }
+    
+    @Test public void testTwoShotTemplate()
+    {
+        var inputText = "Mark Johnson enjoys living in Berkeley California at 102 Dunston Street and use mjess@foobar.com for contacting him.";
+        try 
+        {
+            var prompt0 = OpenAICompletions.readFileToString("two-shot-2-var.txt");
+            System.out.println("prompt0: " + prompt0);
+            var prompt = OpenAICompletions.promptVar(prompt0, "{input_text}", inputText);
+            System.out.println("prompt: " + prompt);
+            var result = OpenAICompletions.getCompletion(prompt);
+            System.out.println("two shot extraction completion: " + result);          
+        }
+        catch(IOException e)
+        {
+            e.printStackTrace();
+        }
+  
     }
 }
