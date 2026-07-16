@@ -1,16 +1,47 @@
 /*
 *   @Author : Yossep BINYOUM
 *   @Date   : 11/07/2026
-*   @Brief : Based on Mark Watson book (Practical AI).
+*   @Brief : 
+*   
+*   Based on Mark Watson book (Practical AI).
+*   
 *   Dans le développement de systèmes d’IA concrets, les modèles de langage à grande échelle (LLM), 
 *   tels que ceux proposés par OpenAI, Anthropic et Hugging Face, se sont imposés comme des outils essentiels 
 *   pour de nombreuses applications, notamment le traitement, la génération et la compréhension du langage naturel. 
 *   Ces modèles, basés sur des architectures d’apprentissage profond, renferment une mine de connaissances et de capacités de calcul. 
 *   
 *   Nous allons ici aborder les bases qui te permettront, cher lecteur, de te lancer dans l’utilisation des APIs OpenAI 
-*   pour des tâches de complétion de texte en code Java. Dans le chapitre 2, nous reproduirons le même exercice : 
-*   nous exécuterons des LLM en local sur nos ordinateurs portables à l’aide de la plateforme Ollama.
+*   pour des tâches de complétion de texte en code Java. 
+*   
+*   La librairie OpenAI-llm-client est concu pour interagir avec l'API d'OpenAI afin d'accepter un prompt sous forme de 
+*   chaine de caractere et de retourne la reponse du modele.
+*   
+*   METHODES : 
+*   
+*   OpenAICompletions::getCompletion, effectue les etapes suivantes :
+* 
+*       1. Initialisation du client : Nous utilisons une seule instance d'OpenAIClient initialisee via **OpenAIOkHttpClient.fromEnv()** 
+*           qui recupere automatiquement votre cle API depuis les variables d'environnement de votre machine.
 *
+*       2. Structure des parametres de la requete : Construit un objet de la classe ChatCompletionCreateParams en utilisant le builder()
+*           , specifiant le message de l'utilisateur passe en parametre de la methode getCompletion et enfin en specifiant le modele 
+*           ici "GPT_5_MINI". La liste des modeles est disponibles ic : https://developers.openai.com/api/docs/models/all
+*
+*       3. Envoie de la requete : Fait appel a la methode, client.chat().completions().create(params) de l'instance qui envoie de maniere 
+*       synchrone la requete via OKHttp et attend pour recevoir la reponse sous forme d'ojet ChatCompletion (en passant en un objet au format JSON)
+*
+*       4. Parser la reponse : On recupere le premier choix parmi les messages et ensuite extrait le contenu (chaine de caracteres).
+*  
+*   Dependances :
+*   
+*       java.io.IOException
+*       java.nio.file.Files
+*       java.nio.file.Path
+*       com.openai.client.OpenAIClient
+*       com.openai.client.okhttp.OKHttpClient
+*       com.openai.models.ChatModel;
+*       com.openai.models.chat.completions.ChatCompletion;
+*       com.openai.models.chat.completions.ChatCompletionCreateParams;
 *   
 *   ERRORS : 
 *   
@@ -71,6 +102,7 @@ public class OpenAICompletions
                 .build();
 
         ChatCompletion chatCompletion = client.chat().completions().create(params);
+        System.out.println(chatCompletion);
 
         var content = chatCompletion.choices().get(0).message().content().orElse("");
         System.out.println(content);
