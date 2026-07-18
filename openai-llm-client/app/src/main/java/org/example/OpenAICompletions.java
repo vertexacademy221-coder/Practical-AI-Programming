@@ -22,6 +22,8 @@
 * 
 *       1. Initialisation du client : Nous utilisons une seule instance d'OpenAIClient initialisee via **OpenAIOkHttpClient.fromEnv()** 
 *           qui recupere automatiquement votre cle API depuis les variables d'environnement de votre machine.
+
+            // En java simple,  var environment = System.getenv("OPENAI_API_KEY");
 *
 *       2. Structure des parametres de la requete : Construit un objet de la classe ChatCompletionCreateParams en utilisant le builder()
 *           , specifiant le message de l'utilisateur passe en parametre de la methode getCompletion et enfin en specifiant le modele 
@@ -102,7 +104,7 @@ public class OpenAICompletions
                 .build();
 
         ChatCompletion chatCompletion = client.chat().completions().create(params);
-        System.out.println(chatCompletion);
+        //System.out.println(chatCompletion);
 
         var content = chatCompletion.choices().get(0).message().content().orElse("");
         System.out.println(content);
