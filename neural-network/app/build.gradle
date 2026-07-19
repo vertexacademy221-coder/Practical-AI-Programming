@@ -34,3 +34,21 @@ application {
     // Define the main class for the application.
     mainClass = 'com.vertexacademy.neuralnetwork.Neuron'
 }
+
+
+tasks.named('test') {
+
+    // Declenche l'affichage pour les tests reussis, echoues ou ignores
+    testLogging {
+
+        events "failed", "skipped"
+
+        // Force l'affichage des messages et des exception
+        showExceptions true
+        showCauses true
+        showStackTraces true
+
+        // Optionnel : affiche le détail ligne par ligne de l'erreur
+        exceptionFormat "full"
+    }
+}

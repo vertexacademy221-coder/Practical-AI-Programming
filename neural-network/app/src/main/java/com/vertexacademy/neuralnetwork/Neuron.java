@@ -15,6 +15,7 @@
  *              * feed(Array[] inputs) : int 
  *              
 */
+
 package com.vertexacademy.neuralnetwork;
 
 /*
@@ -57,26 +58,18 @@ public class Neuron {
 
     public int feed(double[] inputs)
     {
-        try 
-        {
-            if (inputs.length != weights.length)
-                throw new IllegalArgumentException("Le nombre d'entrées ne correspond pas au nombre de poids du neurone.");
+        if (inputs.length != weights.length)
+            throw new IllegalArgumentException("Le nombre d'entrées ne correspond pas au nombre de poids du neurone.");
+        
+        double sum = 0.0;
 
-            for (int i = 0; i < inputs.length; i++)
-            {
-                output += (weights[i] * inputs[i]);
-            }
-        }
-        catch (IllegalArgumentException e)
+        for (int i = 0; i < inputs.length; i++)
         {
-            e.printStackTrace();
+            sum += (weights[i] * inputs[i]);
         }
-        finally
-        {
-            output += bias;
-            if (output > 0) {return 1;}
-            else return 0;
-        }
+        
+        this.output = sum + bias;
+        return (this.output > 0) ? 1 : 0;
     }
 
     /*[Getter]*/

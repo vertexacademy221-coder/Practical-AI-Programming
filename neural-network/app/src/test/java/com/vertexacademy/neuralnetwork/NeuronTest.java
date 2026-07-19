@@ -8,8 +8,55 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 public class NeuronTest {
-    @Test public void neuronHasAGreeting() {
-        Neuron classUnderTest = new Neuron(3);
-        assertNotNull("neuron should have a greeting", classUnderTest.getGreeting());
+    
+    /*
+    *   La methode testNeuronFireOne prouve que le neurone apres
+    *   activation retourne 1.
+    */
+    @Test 
+    public void testNeuronFireOne() {
+        
+        double[] weights = {1, 2};
+        double[] inputs  = {5, 2};
+
+        Neuron n = new Neuron(2);
+        n.setWeights(weights);
+        n.setBias(-2);
+        
+        assertEquals("neuron should fire one", n.feed(inputs), 1);
+    }
+
+    /*
+    *   La methode testNeuronFireZero prouve que le neurone apres
+    *   activation retourne 0.
+    */
+    @Test 
+    public void testNeuronFireZero() {
+        
+        Neuron n = new Neuron(2);
+        n.setWeights(new double[]{1, 2});
+        n.setBias(-2);
+
+        assertEquals("neuron should fire zero", 
+                        n.feed(new double[]{-2, 2}), 0);
+    }
+
+    /*
+    *   La methode testAND prouve le fonctionnement d'un neurone
+    *   sur la table de verite de la porte logique AND. 
+    */
+    @Test
+    public void testAND() {
+
+        // Deux entrees comme la porte logique AND
+        Neuron n = new Neuron(2);
+
+        n.setWeights(new double[]{1, 1});
+        n.setBias(-1.5);
+
+        assertEquals(" 0 AND 0 should return 0", n.feed(new double[]{0,0}), 0);
+        assertEquals(" 0 AND 1 should return 0", n.feed(new double[]{0,1}), 0);
+        assertEquals(" 1 AND 0 should return 0", n.feed(new double[]{1,0}), 0);
+        assertEquals(" 1 AND 1 should return 1", n.feed(new double[]{1,1}), 1);
     }
 }
