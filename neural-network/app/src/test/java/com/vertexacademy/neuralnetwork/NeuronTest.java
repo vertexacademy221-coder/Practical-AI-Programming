@@ -42,8 +42,8 @@ public class NeuronTest {
     }
 
     /*
-    *   La methode testAND prouve le fonctionnement d'un neurone
-    *   sur la table de verite de la porte logique AND. 
+    *   La methode testAND prouve le bon fonctionnement d'un neurone
+    *   sur la realisation d'une table de verite pour la porte logique AND. 
     */
     @Test
     public void testAND() {
@@ -58,5 +58,72 @@ public class NeuronTest {
         assertEquals(" 0 AND 1 should return 0", n.feed(new double[]{0,1}), 0);
         assertEquals(" 1 AND 0 should return 0", n.feed(new double[]{1,0}), 0);
         assertEquals(" 1 AND 1 should return 1", n.feed(new double[]{1,1}), 1);
+    }
+
+    /*
+    *   La methode testOR prouve le bon fonctionnement d'un neurone
+    *   sur la realisation d'une table de verite pour la porte logique OR
+    */
+    @Test
+    public void testOR() {
+        Neuron n = new Neuron(2);
+
+        n.setWeights(new double[]{1, 1});
+        n.setBias(-0.5);
+
+        assertEquals(" 0 OR 0 should return 0", n.feed(new double[]{0, 0}), 0);
+        assertEquals(" 0 OR 1 should return 1", n.feed(new double[]{0, 1}), 1);
+        assertEquals(" 1 OR 0 should return 1", n.feed(new double[]{1, 0}), 1);
+        assertEquals(" 1 OR 1 should return 1", n.feed(new double[]{1, 1}), 1);
+    }
+
+    /*
+    *   La methode testNOR est une negation de la porte logique OR tout simplement.
+    *
+    */
+    @Test
+    public void testNOR() {
+        Neuron n = new Neuron(2);
+
+        n.setWeights(new double[]{-1, -1});
+        n.setBias(0.5);
+
+        assertEquals(" 0 NOR 0 should return 1", n.feed(new double[]{0, 0}), 1);
+        assertEquals(" 0 NOR 1 should return 0", n.feed(new double[]{0, 1}), 0);
+        assertEquals(" 1 NOR 0 should return 0", n.feed(new double[]{1, 0}), 0);
+        assertEquals(" 1 NOR 1 should return 0", n.feed(new double[]{1, 1}), 0);
+    }
+
+    /*
+    *   La methode NOT permet de tester le neuron avec un tensor de dim 1
+    *   applique a son entree.
+    *
+    */
+    @Test
+    public void testNOT() {
+        Neuron n = new Neuron(1);
+
+        n.setWeights(new double[]{-1});
+        n.setBias(0.5);
+
+        assertEquals(" NOT 0 should return 1", n.feed(new double[]{0}), 1);
+        assertEquals(" NOT 1 should return 0", n.feed(new double[]{1}), 0);
+    }
+
+    /*
+    *   La methode testWrongFeeding permet de configurer qu'une erreur lors
+    *   du passage de parametre a la methode feed doit lever une exception.
+    */
+    @Test
+    public void testWrongFeeding() {
+
+        Neuron n = new Neuron(1);
+
+        n.setWeights(new double[]{-1});
+        n.setBias(0.5);
+
+        assertThrows(IllegalArgumentException.class, () -> {
+            n.feed(new double[]{1, 1});
+        });
     }
 }

@@ -48,7 +48,7 @@ tasks.named('test') {
         showCauses true
         showStackTraces true
 
-        // Optionnel : affiche le détail ligne par ligne de l'erreur
+        // Affiche le détail ligne par ligne de l'erreur
         exceptionFormat "full"
     }
 }

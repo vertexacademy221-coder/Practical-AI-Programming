@@ -7,12 +7,12 @@
  *          une sortie output.
  *          Des Methodes publiques :
  *              * Getter :
- *                  * getWeights () : Array[]
+ *                  * getWeights () : double[]
  *                  * getBias() : double
  *              * Setter :
- *                  * setWeights(Array[] weights),
+ *                  * setWeights(double[] weights),
  *                  * setBias(double b)
- *              * feed(Array[] inputs) : int 
+ *              * feed(double[] inputs) : int 
  *              
 */
 
@@ -56,6 +56,9 @@ public class Neuron {
         this.bias = random.nextDouble() * 2 - 1;
     }
 
+    /*
+    *   Fonction d'activation du neuron.
+    */
     public int feed(double[] inputs)
     {
         if (inputs.length != weights.length)
