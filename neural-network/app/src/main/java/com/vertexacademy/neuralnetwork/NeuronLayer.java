@@ -95,6 +95,14 @@ public class NeuronLayer {
         return outputs;
     }
 
+    // Ecrivez la methode train pour la couche de neurones
+    public void train(double[] inputs, double desiredOutput) {
+        for (int i = 0; i < this.neurons.length; i++) {
+            this.neurons[i].train(inputs, desiredOutput);
+        }
+    }
+
+
     /*[Getter]*/
 
     public SigmoidNeuron[] getNeurons() {return neurons;}
@@ -128,9 +136,10 @@ public class NeuronLayer {
 
         for (int i = 0; i < layer.neurons.length; i++)
         {
-            System.out.printf("neuron[%d]\nw[0] = %.4f \t w[1] = %.4f\t bias = %.4f", 
+            System.out.printf("neuron[%d]\nw[0] = %.4f \t w[1] = %.4f\t continiousOutput= %.4f\tbias = %.4f", 
                         i, layer.neurons[i].getWeights()[0], 
                         layer.neurons[i].getWeights()[1],
+                        layer.neurons[i].getContinuousOutput(),
                         layer.neurons[i].getBias());
             System.out.println();
         }

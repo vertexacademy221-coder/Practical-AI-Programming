@@ -23,13 +23,13 @@ public class App {
     };
 
     // Entrainement sur plusieurs epoques
-    private static int nbEpochs = 5000;
+    private static int nbEpochs = 1000;
 
     public static void main(String[] args) {
 
         testNeuron();
         testSigmoidNeuron();
-        testNeuronLayer();
+        //testNeuronLayer();
     }
 
     /*
@@ -59,7 +59,7 @@ public class App {
                 neuron.train(inputs[i], desiredOutputs[i]);   
             }
 
-            if ((epoch + 1) % 1000 == 0) {
+            if ((epoch + 1) % 100 == 0) {
                 afficherParametres(neuron, epoch + 1);
             }
         }
@@ -92,7 +92,7 @@ public class App {
 
         System.out.println("Avant entrainement :");
         System.out.println();
-        afficherSorties(((SigmoidNeuron)neuron), inputs);
+        afficherSorties(neuron, inputs);
 
         
         for (int epoch = 0; epoch < nbEpochs; epoch++) {
