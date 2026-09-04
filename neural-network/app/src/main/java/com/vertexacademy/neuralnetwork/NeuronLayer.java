@@ -96,9 +96,15 @@ public class NeuronLayer {
     }
 
     // Ecrivez la methode train pour la couche de neurones
-    public void train(double[] inputs, double desiredOutput) {
+    public void train(double[] inputs, double[] desiredOutputs) {
+
+        if (desiredOutputs.length != this.neurons.length) {
+            throw new IllegalArgumentException("Le nombre de sorties desirees doit correspondre " + 
+                                                "au nombre de neurones de la couche.");
+        }
+
         for (int i = 0; i < this.neurons.length; i++) {
-            this.neurons[i].train(inputs, desiredOutput);
+            this.neurons[i].train(inputs, desiredOutputs[i]);
         }
     }
 
@@ -123,7 +129,7 @@ public class NeuronLayer {
 
     public static void main(String[] args) {
 
-        NeuronLayer layer = new NeuronLayer(3, 2);
+        NeuronLayer layer = new NeuronLayer(4, 2);
 
         System.out.println("Couche de " + layer.getNeurons().length
                         + " neurones, learningRate = " + layer.getLearningRate());
@@ -153,5 +159,6 @@ public class NeuronLayer {
             System.out.print(outputs[i] + (i < outputs.length - 1 ? ", " : ""));
         }
         System.out.println("]");
+
     }
 }

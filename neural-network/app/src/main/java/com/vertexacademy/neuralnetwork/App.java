@@ -27,9 +27,9 @@ public class App {
 
     public static void main(String[] args) {
 
-        testNeuron();
-        testSigmoidNeuron();
-        //testNeuronLayer();
+        //testNeuron();
+        //testSigmoidNeuron();
+        testNeuronLayer();
     }
 
     /*
@@ -109,6 +109,49 @@ public class App {
     }
 
     /*
+    *   Construit une NeuronLayer et verifie que chaque neurone de la
+    *   couche produit bien une sortie lorsqu'on lui transmet des
+    *   entrees. Comme les poids/biais sont initialises aleatoirement,
+    *   ce test verifie surtout la bonne construction de la couche et
+    *   la propagation correcte a travers tous ses neurones.
+    */
+    private static void testNeuronLayer() {
+
+        System.out.println("=== Test de NeuronLayer ===\n");
+
+        int nbOfNeurons = 4;
+        int nbOfWeights = 2;
+
+
+        NeuronLayer layer = new NeuronLayer(nbOfNeurons, nbOfWeights);
+
+        System.out.println("Couche construite avec " + layer.getNeurons().length
+                        + " neurones, chacun avec " + nbOfWeights + " poids.");
+        System.out.println("learningRate de la couche = " + layer.getLearningRate());
+        
+        
+        // Entrainement de la couche de neurones sur la table de verite de la porte OR
+        double[] desiredOutputs = {0, 1, 1, 1}; // porte OR
+
+        System.out.println("\nEtat initial :");
+        afficherEtatCouche(layer, inputs, desiredOutputs, 0);
+
+        for (int epoch = 0; epoch < nbEpochs; epoch++) {
+            for (int i = 0; i < inputs.length; i++) {
+                layer.train(inputs[i], desiredOutputs);
+            }
+
+            if ((epoch + 1) % 100 == 0) {
+                afficherEtatCouche(layer, inputs, desiredOutputs, epoch + 1);
+            }
+        }
+
+        System.out.println("\nEtat final :");
+        afficherEtatCouche(layer, inputs, desiredOutputs, nbEpochs);
+    }
+
+
+    /*
     *   Affiche, pour chaque entree, la sortie continue (sigmoide)
     *   ainsi que la sortie binaire (seuillee a 0.5) du neurone.
     */
@@ -143,42 +186,41 @@ public class App {
         System.out.printf("] | bias = %.4f%n", neuron.getBias());
     }
 
-    /*
-    *   Construit une NeuronLayer et verifie que chaque neurone de la
-    *   couche produit bien une sortie lorsqu'on lui transmet des
-    *   entrees. Comme les poids/biais sont initialises aleatoirement,
-    *   ce test verifie surtout la bonne construction de la couche et
-    *   la propagation correcte a travers tous ses neurones.
-    */
-    private static void testNeuronLayer() {
+    private static void afficherEtatCouche(
+        NeuronLayer layer, 
+        double[][] inputs,
+        double[] desiredOutputs, 
+        int epoch
+    ) {
+        System.out.printf("\n--- Epoque %d ---%n", epoch);
 
-        System.out.println("=== Test de NeuronLayer ===\n");
-
-        int nbOfNeurons = 4;
-        int nbOfWeights = 3;
-
-        NeuronLayer layer = new NeuronLayer(nbOfNeurons, nbOfWeights);
-
-        System.out.println("Couche construite avec " + layer.getNeurons().length
-                        + " neurones, chacun avec " + nbOfWeights + " poids.");
-        System.out.println("learningRate de la couche = " + layer.getLearningRate());
-
-        double[] sampleInputs = {1.0, 0.0, 1.0};
-        int[] outputs = layer.feed(sampleInputs);
-
-        System.out.print("\nSorties de la couche pour l'entree [1, 0, 1] : [");
-        for (int i = 0; i < outputs.length; i++) {
-            System.out.print(outputs[i] + (i < outputs.length - 1 ? ", " : ""));
-        }
-        System.out.println("]");
-
-        // Detail par neurone : sortie continue + poids/biais utilises
-        System.out.println("\nDetail par neurone :");
         SigmoidNeuron[] neurons = layer.getNeurons();
-        for (int i = 0; i < neurons.length; i++) {
-            SigmoidNeuron n = neurons[i];
-            System.out.printf("  Neurone %d : sortie continue = %.4f | bias = %.4f%n",
-                            i, n.getContinuousOutput(), n.getBias());
+
+        for (int neuronIndex = 0; neuronIndex < neurons.length; neuronIndex++) {
+
+            SigmoidNeuron neuron = neurons[neuronIndex];
+            double[] weights = neuron.getWeights();
+
+            System.out.printf("Neurone %d : poids = [", neuronIndex);
+            for (int weightIndex = 0; weightIndex < weights.length; weightIndex++) {
+                System.out.printf("%.4f%s", weights[weightIndex],
+                                  weightIndex < weights.length - 1 ? ", " : "");
+            }
+            System.out.printf("] | biais = %.4f%n", neuron.getBias());
+
+            for (int inputIndex = 0; inputIndex < inputs.length; inputIndex++) {
+
+                int binaryOutput = neuron.feed(inputs[inputIndex]);
+                double continuousOutput = neuron.getContinuousOutput();
+                double error = desiredOutputs[neuronIndex] - continuousOutput;
+
+                System.out.printf("  entree [%d, %d] -> cible = %.0f\t| Pourcentage activation = %.4f\t| "
+                                  + "binaire = %d\t| erreur = %+.4f%n",
+                                  (int) inputs[inputIndex][0], (int) inputs[inputIndex][1],
+                                  desiredOutputs[neuronIndex], continuousOutput * 100.0f,
+                                  binaryOutput, error);
+            }
+            System.out.println();
         }
     }
 }
