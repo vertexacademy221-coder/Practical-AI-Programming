@@ -77,6 +77,35 @@ public class NeuronNetwork {
         }
     }
 
+    /*
+        Deux methodes qui permettent de configurer le reseau neuronal avec des
+        parametres bien definis. Ceci est interessant dans le cas ou on veut 
+        creer un reseau neuronal avec une couche cachee et une couche de sortie.
+        Ou tout simplement x nombre de couches cachees.
+    */
+
+    // Cree un reseau avec une couche cache contenant 2 neurons, nombre de poids 1 par neurones
+    // et une couche de sortie.
+    public void configure (int nbOfHiddenLayers, int nbOfNeurons, int nbOfWeights, int nbOfOutput) {
+        
+        if (!layers.isEmpty()) {
+            throw new IllegalStateException("Le reseau de neurones est deja configure.");
+        }
+
+        if (nbOfHiddenLayers < 0 || nbOfNeurons <= 0 || nbOfWeights <= 0 || nbOfOutput <= 0) {
+            throw new IllegalArgumentException("Les parametres de configuration sont invalides.");
+        }
+
+        for (int i = 0; i < nbOfHiddenLayers; i++) {
+            int numberOfWeights = i == 0 ? nbOfWeights : nbOfNeurons;
+            addLayer(new NeuronLayer(nbOfNeurons, numberOfWeights));
+        }
+
+        // Couche de sortie
+        NeuronLayer outputLayer = new NeuronLayer(nbOfOutput, nbOfNeurons);
+        addLayer(outputLayer);
+    }
+
     //
     // Setters
     //

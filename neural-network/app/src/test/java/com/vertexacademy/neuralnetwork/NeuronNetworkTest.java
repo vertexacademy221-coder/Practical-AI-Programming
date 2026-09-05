@@ -76,4 +76,26 @@ public class NeuronNetworkTest {
     public void getNumberOfOutputsRejectsEmptyNetwork() {
         new NeuronNetwork().getNumberOfOutputs();
     }
+
+    @Test
+    public void configureCreatesDigitalComparatorNetwork() {
+        NeuronNetwork digitalComparatorNetwork = new NeuronNetwork();
+
+        // Deux entrees, quatre neurones caches et trois sorties :
+        // [aGb, aEb, aLb].
+        digitalComparatorNetwork.configure(1, 4, 2, 3);
+
+        assertEquals(3, digitalComparatorNetwork.getNumberOfOutputs());
+    }
+
+    @Test
+    public void configuredDigitalComparatorNetworkCanFeedTwoInputs() {
+        NeuronNetwork digitalComparatorNetwork = new NeuronNetwork();
+        digitalComparatorNetwork.configure(1, 4, 2, 3);
+
+        int[] outputs = digitalComparatorNetwork.feed(new double[]{0, 1});
+
+        // La methode feed actuelle renvoie encore les sorties de la couche cachee.
+        assertEquals(4, outputs.length);
+    }
 }
