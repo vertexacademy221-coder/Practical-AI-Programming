@@ -30,6 +30,8 @@ public class NeuronLayer {
 
     private SigmoidNeuron[] neurons;
     private double learningRate;
+    private NeuronLayer previousLayer;
+    private NeuronLayer nextLayer;
 
 
     /*
@@ -43,12 +45,68 @@ public class NeuronLayer {
     }
 
     /*
-    *   Constructeur principal, equivalent de la methode Pharo
-    *   initializeNbOfNeurons:nbOfWeights:using:
+    *   Constructeur principal
     */
     public NeuronLayer(int nbOfNeurons, int nbOfWeights, Random random)
     {
         this.initializeNbOfNeurons(nbOfNeurons, nbOfWeights, random);
+    }
+
+    /**
+     * 
+     * @return true si la couche est la couche de sortie. La couche de sortie
+     * est definie ssi nextLayer est nulle.
+    */
+
+    public boolean isOutputLayer() {
+        return nextLayer == null;
+    }
+
+    /*[Getter]*/
+
+    /**
+     * 
+     * @return double[] Un tableau de Sigmoid neurons qui compose la couche
+     */
+    public SigmoidNeuron[] getNeurons() {return neurons;}
+
+    /**
+     * 
+     * @return double le taux d'apprentissage de la couche
+    */
+    public double getLearningRate() {return learningRate;}
+
+    public NeuronLayer getPreviousLayer() {return previousLayer;}
+    public NeuronLayer getNextLayer() {return nextLayer;}
+
+
+    /*[Setter]*/
+
+    public void setLearningRate(double learningRate)
+    {
+        this.learningRate = learningRate;
+
+        for (SigmoidNeuron neuron : this.neurons)
+        {
+            neuron.setLearningRate(learningRate);
+        }
+    }
+
+    /**
+     * @brief Permet de chainer les couches entre elles.
+     * @param layer
+    */
+
+    public void setPreviousLayer(NeuronLayer layer) {
+        previousLayer = layer;
+    }
+
+    /**
+     * @brief Permet de chainer les couches entre elles.
+     * @param layer
+     */
+    public void setNextLayer(NeuronLayer layer) {
+        nextLayer = layer;
     }
 
     /*
@@ -99,30 +157,13 @@ public class NeuronLayer {
     public void train(double[] inputs, double[] desiredOutputs) {
 
         if (desiredOutputs.length != this.neurons.length) {
-            throw new IllegalArgumentException("Le nombre de sorties desirees doit correspondre " + 
-                                                "au nombre de neurones de la couche.");
+            throw new IllegalArgumentException(
+                    "Le nombre de sorties desirees doit correspondre " + 
+                    "au nombre de neurones de la couche.");
         }
 
         for (int i = 0; i < this.neurons.length; i++) {
             this.neurons[i].train(inputs, desiredOutputs[i]);
-        }
-    }
-
-
-    /*[Getter]*/
-
-    public SigmoidNeuron[] getNeurons() {return neurons;}
-    public double getLearningRate() {return learningRate;}
-
-    /*[Setter]*/
-
-    public void setLearningRate(double learningRate)
-    {
-        this.learningRate = learningRate;
-
-        for (SigmoidNeuron neuron : this.neurons)
-        {
-            neuron.setLearningRate(learningRate);
         }
     }
 

@@ -3,6 +3,7 @@
  * @Author  : Yossep BINYOUM
  * @Date    : 07/2026
  * @Brief   : Classe de demonstration (point d'entree) permettant de :
+ * 
  *              1) Tester un SigmoidNeuron seul : creation, feed(),
  *                 puis quelques iterations d'entrainement sur une
  *                 porte logique OR pour verifier que la sortie
@@ -10,7 +11,6 @@
  *              2) Construire une NeuronLayer et verifier que chaque
  *                 neurone de la couche produit bien une sortie.
 */
-
 package com.vertexacademy.neuralnetwork;
 
 public class App {
@@ -39,6 +39,7 @@ public class App {
     */
 
     private static void testNeuron() {
+
         System.out.println("==== Test de Perceptron =====\n");
 
         Neuron neuron = new Neuron(2);
@@ -50,6 +51,7 @@ public class App {
         
         System.out.println("Avant entrainement :");
         System.out.println();
+        
         afficherParametres(neuron, 0);
         afficherSorties(neuron, inputs);
 
